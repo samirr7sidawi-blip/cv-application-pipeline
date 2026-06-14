@@ -1,0 +1,24 @@
+[Unit]
+Description=CV Agent webhook (FastAPI)
+After=network.target
+
+[Service]
+Type=simple
+User=cvagent
+Group=cvagent
+WorkingDirectory=/opt/cv_agent
+EnvironmentFile=/etc/cv_agent.env
+ExecStart=/opt/cv_agent/.venv/bin/uvicorn tools.webhook_server:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
+
+# Hardening
+NoNewPrivileges=yes
+ProtectSystem=full
+PrivateTmp=no
+ReadWritePaths=/opt/cv_agent /var/log/cv_agent
+
+[Install]
+WantedBy=multi-user.target

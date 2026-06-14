@@ -1,0 +1,15 @@
+.env
+credentials.json
+token.json
+.tmp/
+__pycache__/
+*.pyc
+*.pyo
+
+# Local trackers / personal files — not for the repo
+applications.xlsx
+cv
+*.bak
+
+# OS noise
+.DS_Store

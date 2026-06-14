@@ -1,0 +1,32 @@
+# Caddyfile for CV Agent webhook
+#
+# Replace <SUBDOMAIN> with the duckdns subdomain you registered, e.g.
+#   cvagent-samir.duckdns.org
+# Caddy will automatically request and renew a Let's Encrypt cert for it.
+#
+# After editing, reload with: sudo systemctl reload caddy
+
+<SUBDOMAIN> {
+    encode zstd gzip
+
+    # Block everything except the two endpoints we expose
+    @allowed {
+        path /apply /health
+    }
+
+    handle @allowed {
+        reverse_proxy 127.0.0.1:8000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+        }
+    }
+
+    handle {
+        respond "Not found" 404
+    }
+
+    log {
+        output file /var/log/caddy/cv_agent.log
+        format json
+    }
+}
